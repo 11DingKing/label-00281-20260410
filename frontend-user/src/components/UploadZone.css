@@ -1,0 +1,139 @@
+/**
+ * 上传区域组件样式
+ */
+
+.upload-zone {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  background: rgba(255, 255, 255, 0.02);
+  position: relative;
+  overflow: visible;
+  z-index: 1;
+  min-height: 220px;
+  height: auto;
+  display: block;
+}
+
+.upload-zone > * {
+  position: relative;
+  z-index: 2;
+}
+
+.upload-zone * {
+  pointer-events: none;
+}
+
+.upload-zone::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--primary-gradient);
+  opacity: 0;
+  transition: var(--transition-normal);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.upload-zone:hover:not(.disabled) {
+  border-color: var(--primary-color);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.upload-zone:hover:not(.disabled)::before {
+  opacity: 0.03;
+}
+
+.upload-zone.dragging {
+  border-color: var(--primary-color);
+  background: rgba(99, 102, 241, 0.1);
+  transform: scale(1.02);
+}
+
+.upload-zone.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.upload-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+  animation: float 3s ease-in-out infinite;
+  position: relative;
+  z-index: 3;
+  display: block;
+  text-align: center;
+}
+
+.upload-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 3;
+  display: block;
+  text-align: center;
+}
+
+.upload-hint {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  position: relative;
+  z-index: 3;
+  display: block;
+  text-align: center;
+}
+
+.upload-formats {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 3;
+}
+
+.format-tag {
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "SF Mono", Monaco, monospace;
+  display: inline-block;
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .upload-zone {
+    padding: 32px 16px;
+    min-height: 180px;
+  }
+
+  .upload-icon {
+    font-size: 40px;
+  }
+
+  .upload-title {
+    font-size: 16px;
+  }
+}
+
+/* 浮动动画 */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

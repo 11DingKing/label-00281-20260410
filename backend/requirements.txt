@@ -1,0 +1,30 @@
+# 表格检测和OCR应用依赖
+# 深度学习框架
+torch>=2.0.0
+torchvision>=0.15.0
+ultralytics>=8.0.0  # YOLOv8/9
+
+# 图像处理
+opencv-python>=4.8.0
+Pillow>=10.0.0
+numpy>=1.24.0
+
+# OCR相关 - 使用 PaddleOCR 2.9.x (稳定版，兼容性好)
+# PaddlePaddle: PaddleOCR 的核心依赖
+paddlepaddle>=2.5.0
+paddleocr==2.9.1
+
+# Web框架
+flask>=3.0.0
+flask-cors>=4.0.0
+gunicorn>=21.0.0
+
+# 工具库
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# PDF处理
+pymupdf>=1.23.0
+
+# 数据导出
+openpyxl>=3.1.0

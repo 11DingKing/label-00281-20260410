@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    container_name: table-parser-backend
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/results:/app/results
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+      - DISABLE_MODEL_SOURCE_CHECK=True
+      - MAX_PDF_PAGES=20
+      - GUNICORN_WORKERS=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - table-parser-network
+
+  frontend:
+    build:
+      context: ./frontend-user
+      dockerfile: Dockerfile
+    container_name: table-parser-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - table-parser-network
+
+networks:
+  table-parser-network:
+    driver: bridge

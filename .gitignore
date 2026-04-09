@@ -1,0 +1,114 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+
+# 模型文件
+*.pt
+*.pth
+*.onnx
+*.pb
+*.h5
+*.ckpt
+models/
+weights/
+
+# 上传和结果文件
+uploads/
+results/
+*.jpg
+*.png
+*.jpeg
+*.tiff
+*.bmp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# PaddleOCR缓存
+.paddleocr/
+
+# YOLO缓存
+runs/
+
+# 测试
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Docker
+.dockerignore
+
+# 后端项目忽略
+backend/__pycache__/
+backend/*.pyc
+backend/venv/
+backend/.pytest_cache/
+backend/uploads/
+backend/results/
+
+# 前端项目忽略
+frontend-user/node_modules/
+frontend-user/dist/
+frontend-user/.vite/
+frontend-user/.env
+frontend-user/.env.local
+frontend-user/.env.*.local
+frontend-user/coverage/
+frontend-user/.nyc_output/
+frontend-user/.next/
+frontend-user/out/
+
+frontend-admin/node_modules/
+frontend-admin/dist/
+frontend-admin/.vite/
+frontend-admin/.env
+frontend-admin/.env.local
+frontend-admin/.env.*.local
+frontend-admin/coverage/
+frontend-admin/.nyc_output/
+frontend-admin/.next/
+frontend-admin/out/
+
+frontend-mp/node_modules/
+frontend-mp/dist/
+frontend-mp/.vite/
+frontend-mp/.env
+frontend-mp/.env.local
+frontend-mp/.env.*.local
+frontend-mp/coverage/
+frontend-mp/.nyc_output/
+frontend-mp/.next/
+frontend-mp/out/
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
