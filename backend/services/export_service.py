@@ -80,7 +80,8 @@ class ExportService:
         if table_index >= len(tables):
             raise ExportError(f'表格索引超出范围，共 {len(tables)} 个表格')
         
-        table_data = tables[table_index].get('data', [])
+        table = tables[table_index]
+        table_data = table.get('data', [])
         if not table_data:
             raise ExportError('表格数据为空')
         
@@ -92,7 +93,9 @@ class ExportService:
         csv_content = output.getvalue()
         output.close()
         
-        filename = f'table_{table_index + 1}.csv'
+        # 使用表格数据中的 global_index 生成文件名，确保一致性
+        display_index = table.get('global_index', table_index) + 1
+        filename = f'table_{display_index}.csv'
         logger.info(f"导出 CSV 成功: {filename}, {len(table_data)} 行")
         
         return csv_content, filename
@@ -133,7 +136,9 @@ class ExportService:
                 if not table_data:
                     continue
                 
-                ws = wb.create_sheet(title=f'表格{idx + 1}')
+                # 使用 global_index 作为 sheet 名称，确保一致性
+                display_index = table.get('global_index', idx) + 1
+                ws = wb.create_sheet(title=f'表格{display_index}')
                 cls._write_table_to_sheet(ws, table_data)
             
             filename = 'tables_all.xlsx'
@@ -142,15 +147,18 @@ class ExportService:
             if table_index >= len(tables):
                 raise ExportError(f'表格索引超出范围，共 {len(tables)} 个表格')
             
-            table_data = tables[table_index].get('data', [])
+            table = tables[table_index]
+            table_data = table.get('data', [])
             if not table_data:
                 raise ExportError('表格数据为空')
             
+            # 使用 global_index 作为 sheet 名称和文件名，确保一致性
+            display_index = table.get('global_index', table_index) + 1
             ws = wb.active
-            ws.title = f'表格{table_index + 1}'
+            ws.title = f'表格{display_index}'
             cls._write_table_to_sheet(ws, table_data)
             
-            filename = f'table_{table_index + 1}.xlsx'
+            filename = f'table_{display_index}.xlsx'
         
         # 保存到内存
         output = io.BytesIO()
@@ -218,8 +226,13 @@ class ExportService:
                 'tables': []
             }
             for idx, table in enumerate(tables):
+                # 使用 global_index 确保索引一致性
+                display_index = table.get('global_index', idx) + 1
                 export_data['tables'].append({
-                    'index': idx + 1,
+                    'index': display_index,
+                    'global_index': table.get('global_index', idx),
+                    'page': table.get('page'),
+                    'page_table_index': table.get('page_table_index'),
                     'rows': len(table.get('data', [])),
                     'cols': len(table.get('data', [[]])[0]) if table.get('data') else 0,
                     'confidence': table.get('confidence', 0),
@@ -231,15 +244,20 @@ class ExportService:
                 raise ExportError(f'表格索引超出范围，共 {len(tables)} 个表格')
             
             table = tables[table_index]
+            # 使用 global_index 确保索引一致性
+            display_index = table.get('global_index', table_index) + 1
             export_data = {
-                'table_index': table_index + 1,
+                'table_index': display_index,
+                'global_index': table.get('global_index', table_index),
+                'page': table.get('page'),
+                'page_table_index': table.get('page_table_index'),
                 'exported_at': datetime.now().isoformat(),
                 'rows': len(table.get('data', [])),
                 'cols': len(table.get('data', [[]])[0]) if table.get('data') else 0,
                 'confidence': table.get('confidence', 0),
                 'data': table.get('data', [])
             }
-            filename = f'table_{table_index + 1}.json'
+            filename = f'table_{display_index}.json'
         
         json_content = json.dumps(export_data, ensure_ascii=False, indent=2)
         

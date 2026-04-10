@@ -345,6 +345,7 @@ def _register_routes(app: Flask) -> None:
             page_results = detect_result.get('pages', [])
             
             previews = []
+            global_table_index = 0
             for page_data in page_results:
                 page_num = page_data['page']
                 boxes = page_data['boxes']
@@ -354,13 +355,14 @@ def _register_routes(app: Flask) -> None:
                 if image is None:
                     continue
                 
+                boxes_with_index = []
                 for idx, box in enumerate(boxes):
                     x1, y1, x2, y2 = [int(v) for v in box[:4]]
                     confidence = box[4] if len(box) > 4 else 0.5
                     
                     cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 3)
                     
-                    label = f'Table {idx + 1} ({confidence:.0%})'
+                    label = f'Table {global_table_index + 1} ({confidence:.0%})'
                     (label_w, label_h), _ = cv2.getTextSize(
                         label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2
                     )
@@ -372,6 +374,14 @@ def _register_routes(app: Flask) -> None:
                         image, label, (x1 + 5, y1 - 5), 
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2
                     )
+                    
+                    boxes_with_index.append({
+                        'bbox': box[:4],
+                        'confidence': confidence,
+                        'page_table_index': idx,
+                        'global_index': global_table_index
+                    })
+                    global_table_index += 1
                 
                 _, buffer = cv2.imencode('.jpg', image, [cv2.IMWRITE_JPEG_QUALITY, 85])
                 img_base64 = base64.b64encode(buffer).decode('utf-8')
@@ -380,7 +390,7 @@ def _register_routes(app: Flask) -> None:
                     'page': page_num,
                     'image': f'data:image/jpeg;base64,{img_base64}',
                     'tables_count': len(boxes),
-                    'boxes': boxes
+                    'boxes': boxes_with_index
                 })
             
             return jsonify({

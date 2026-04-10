@@ -63,6 +63,7 @@ class TableExtractor:
         logger.info(f"共 {len(page_results)} 页，检测到 {total_table_count} 个表格区域")
         
         all_tables = []
+        global_table_index = 0
         
         for page_data in page_results:
             page_num = page_data['page']
@@ -93,6 +94,8 @@ class TableExtractor:
                 
                 all_tables.append({
                     'page': page_num,
+                    'page_table_index': idx,
+                    'global_index': global_table_index,
                     'bbox': box[:4],
                     'confidence': box[4] if len(box) > 4 else 0.5,
                     'structure': {
@@ -101,6 +104,7 @@ class TableExtractor:
                     },
                     'data': table_data
                 })
+                global_table_index += 1
         
         logger.info("=" * 50)
         logger.info(f"表格提取完成: 共 {len(all_tables)} 个表格")
